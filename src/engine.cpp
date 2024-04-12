@@ -225,7 +225,7 @@ void Engine::processInput() {
                 else{
                     decrement = false;
                 }
-                prev -= j;
+                prev = i - j;
             }
             cout << sum << endl;
             //increment
@@ -237,7 +237,7 @@ void Engine::processInput() {
                 else{
                     increment = false;
                 }
-                prev += j;
+                prev = i + j;
             }
             cout << sum << endl;
             if(sum >= win_num){
@@ -332,7 +332,14 @@ void Engine::render() {
                 s->setUniforms();
                 s->draw();
             }
-            string message = "You win!";
+            string message = "";
+            if(player == 1){ //this means that player 2 won, because after player 2 played the winning move, it became player 1's turn
+                message = "Blue Wins!";
+            }
+            else{
+                message = "Red Wins!";
+            }
+
 
             //Display the message on the screen
             //for some reason the position of the text doesn't scale properly with window size, but stays at the same place with static numbers
