@@ -179,6 +179,76 @@ void Engine::processInput() {
             decrement = true;
             increment = true;
 
+            //diagonal this way: /
+            //the idea is the same as the other two, except incremented and decremented by the row size plus one
+            //and it must conform to both constraints
+            //so that each square does not cross to a different row or go off the board
+            for(int j = ROW_SIZE + 1; decrement; j+= ROW_SIZE + 1){
+                if(states[i - j] == player && (i - j) >= 0 && (i - j) % ROW_SIZE < (ROW_SIZE - 1)){ //to make sure they stay on the same row
+                    sum++;
+                }
+                else{
+                    decrement = false;
+                }
+            }
+            //increment
+            for(int j = ROW_SIZE + 1; increment; j+= ROW_SIZE + 1){
+                if(states[i + j] == player && (i + j) <= pow(ROW_SIZE, 2) && (i + j) % ROW_SIZE > 0){
+                    sum++;
+                }
+                else{
+                    increment = false;
+                }
+            }
+            if(sum >= win_num){
+                screen = over;
+            }
+
+            //reset values
+            sum = 1;
+            decrement = true;
+            increment = true;
+
+            //diagonal this way: \
+            //same as the other diagonal except incrementing and decrementing by one less than the row size
+            //since the change is lower than the row size,
+            //there is no guarantee that the next square will be on a new row.
+            //we will add a condition that each new square must have a lower modded index for the decrement step
+            //and must have a higher modded index for the increment step
+
+            //decrement
+            int prev = i;
+            for(int j = ROW_SIZE - 1; decrement; j+= ROW_SIZE - 1){
+                if(states[i - j] == player && (i - j) >= 0 && (i - j) % ROW_SIZE > prev % ROW_SIZE){ //to make sure they stay on the same row
+                    sum++;
+                }
+                else{
+                    decrement = false;
+                }
+                prev -= j;
+            }
+            cout << sum << endl;
+            //increment
+            prev = i;
+            for(int j = ROW_SIZE - 1; increment; j+= ROW_SIZE - 1){
+                if(states[i + j] == player && (i + j) <= pow(ROW_SIZE, 2) && (i + j) % ROW_SIZE < prev % ROW_SIZE){
+                    sum++;
+                }
+                else{
+                    increment = false;
+                }
+                prev += j;
+            }
+            cout << sum << endl;
+            if(sum >= win_num){
+                screen = over;
+            }
+
+            //reset values
+            sum = 1;
+            decrement = true;
+            increment = true;
+
             //make it the next player's turn
             if(player == 1){
                 player = 2;
