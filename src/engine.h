@@ -25,7 +25,7 @@ private:
     /// @brief The width and height of the window.
     const unsigned int width = 800, height = 800; // Window dimensions
     //change the size of the nxn grid here
-    const int ROW_SIZE = 15;
+    const int ROW_SIZE = 3;
 
     //change the number of squares in a row needed to win here
     int win_num = 3;

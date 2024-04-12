@@ -112,20 +112,80 @@ void Engine::processInput() {
             //if it is player 1's turn and a playable square is clicked, that square's state changes to 1 and it becomes player 2's turn
             //if it is player 2's turn and a playable square is clicked, that square's state changes to 2 and it becomes player 1's turn
             if(states[i] == 0){
-                if(player == 1){
-                    states[i] = 1;
-                    player = 2;
-                }
-                else{
-                    states[i] = 2;
-                    player = 1;
-                }
+                states[i] = player;
             }
 
             //check for a win
             //TODO: create this algorithm :(
             //need to check horizontal, vertical, and diagonals
 
+            //find the number of consecutive correct entries of lower index in the direction and te amount above
+            //sum the two and check against the number required for a win.
+            //start with the horizontal
+            bool decrement = true;
+            bool increment = true;
+            int sum = 1; //starts at 1 to count the clicked square
+            //decrement
+            for(int j = 1; decrement; j++){
+                if(states[i - j] == player && (i - j) % ROW_SIZE < (ROW_SIZE - 1)){ //to make sure they stay on the same row
+                    sum++;
+                }
+                else{
+                    decrement = false;
+                }
+            }
+            //increment
+            for(int j = 1; increment; j++){
+                if(states[i + j] == player && (i + j) % ROW_SIZE > 0){
+                    sum++;
+                }
+                else{
+                    increment = false;
+                }
+            }
+            if(sum >= win_num){
+                screen = over;
+            }
+
+            //reset values
+            sum = 1;
+            decrement = true;
+            increment = true;
+            //now check vertical
+            //same concept except we increment and decrement by the row size
+            for(int j = ROW_SIZE; decrement; j+= ROW_SIZE){
+                if(states[i - j] == player && (i - j) >= 0){ //to make sure they stay on the same row
+                    sum++;
+                }
+                else{
+                    decrement = false;
+                }
+            }
+            //increment
+            for(int j = ROW_SIZE; increment; j+= ROW_SIZE){
+                if(states[i + j] == player && (i + j) <= pow(ROW_SIZE, 2)){
+                    sum++;
+                }
+                else{
+                    increment = false;
+                }
+            }
+            if(sum >= win_num){
+                screen = over;
+            }
+
+            //reset values
+            sum = 1;
+            decrement = true;
+            increment = true;
+
+            //make it the next player's turn
+            if(player == 1){
+                player = 2;
+            }
+            else{
+                player = 1;
+            }
         }
         //add a red outline if a square is moused over
         if(screen == play && player == 1 && squares[i]->isOverlapping(vec2(MouseX,MouseY))){
