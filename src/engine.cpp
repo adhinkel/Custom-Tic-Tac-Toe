@@ -4,7 +4,6 @@
 enum state {play, over};
 state screen;
 
-int states[25]; //array to hold the state of each square, populated in initshapes
 
 Engine::Engine() : keys() {
     this->initWindow();
@@ -65,11 +64,14 @@ void Engine::initShaders() {
 
 void Engine::initShapes() {
     int row = 1;
+    if(win_num > ROW_SIZE){
+        win_num = ROW_SIZE;
+    }
     //an array of squares and outlines
     for(int i = 0; i < pow(ROW_SIZE, 2); i++){
         //squares that scale their size and positions with the size of the window (so technically not squares unless the window is square
         squares.push_back(make_unique<Rect>(shapeShader, vec2((i % ROW_SIZE + 1) * (width / (ROW_SIZE + 1))/* to get the squares spaced evenly one the board */, row * (height / (ROW_SIZE + 1))), vec2(width/(2 * ROW_SIZE), height/(2 * ROW_SIZE)), color(0.5, 0.5, 0.5)));
-        states[i] = 0; //populate the states array with zeros, meaning they have not been played on
+        states.push_back(0); //populate the states array with zeros, meaning they have not been played on
 
         //same as squares except objects are slightly bigger to create outline effect
         //black by default to blend with background
@@ -122,6 +124,7 @@ void Engine::processInput() {
 
             //check for a win
             //TODO: create this algorithm :(
+            //need to check horizontal, vertical, and diagonals
 
         }
         //add a red outline if a square is moused over

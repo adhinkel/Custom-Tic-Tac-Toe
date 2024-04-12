@@ -28,8 +28,9 @@ private:
     const int ROW_SIZE = 15;
 
     //change the number of squares in a row needed to win here
-    const int win_num = 3;
+    int win_num = 3;
 
+    vector<int> states;
     int player = 1;
 
     /// @brief Keyboard state (True if pressed, false if not pressed).
