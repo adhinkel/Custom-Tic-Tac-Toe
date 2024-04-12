@@ -24,7 +24,8 @@ private:
 
     /// @brief The width and height of the window.
     const unsigned int width = 800, height = 800; // Window dimensions
-    const int ROW_SIZE = 5;
+    //here
+    const int ROW_SIZE = 3;
 
     /// @brief Keyboard state (True if pressed, false if not pressed).
     /// @details Index this array with GLFW_KEY_{key} to get the state of a key.
