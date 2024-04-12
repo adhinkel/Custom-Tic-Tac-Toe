@@ -1,5 +1,5 @@
 #include "engine.h"
-#include <algorithm>
+#include <string>
 
 enum state {play, over};
 state screen;
@@ -321,6 +321,8 @@ void Engine::render() {
                 s->setUniforms();
                 s->draw();
             }
+            string message = "Match " + std::to_string(win_num) + " to win";
+            this->fontRenderer->renderText(message, 400 - (12 * message.length()), 570, 1, vec3{1, 1, 1});
             break;
         }
         case over: {

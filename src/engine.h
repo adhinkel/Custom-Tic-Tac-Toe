@@ -23,7 +23,7 @@ private:
     GLFWwindow* window{};
 
     /// @brief The width and height of the window.
-    const unsigned int width = 800, height = 800; // Window dimensions
+    const unsigned int width = 1000, height = 1000; // Window dimensions
     //change the size of the nxn grid here
     const int ROW_SIZE = 10;
 
