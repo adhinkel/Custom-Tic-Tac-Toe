@@ -107,16 +107,13 @@ void Engine::processInput() {
 
     //for each square, if it was clicked toggle it and adjacent squares.
     for(int i = 0; i < pow(ROW_SIZE, 2); i++){
-        if(screen == play && mousePressedLastFrame && !mousePressed && squares[i]->isOverlapping(vec2(MouseX, MouseY))){
-            //if the state of a square is 0, it has not been played on yet and is playable
-            //if it is player 1's turn and a playable square is clicked, that square's state changes to 1 and it becomes player 2's turn
-            //if it is player 2's turn and a playable square is clicked, that square's state changes to 2 and it becomes player 1's turn
-            if(states[i] == 0){
-                states[i] = player;
-            }
+        //if the game is ongoing and a playable square is clicked
+        if(screen == play && mousePressedLastFrame && !mousePressed && squares[i]->isOverlapping(vec2(MouseX, MouseY)) && states[i] == 0){
+            //change the state of the square to the number of the player who's turn it is
+            states[i] = player;
 
             //check for a win
-            //TODO: create this algorithm :(
+
             //need to check horizontal, vertical, and diagonals
 
             //find the number of consecutive correct entries of lower index in the direction and te amount above
