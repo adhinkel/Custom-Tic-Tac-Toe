@@ -69,7 +69,7 @@ void Engine::initShapes() {
     for(int i = 0; i < pow(ROW_SIZE, 2); i++){
         //squares that scale their size and positions with the size of the window (so technically not squares unless the window is square
         squares.push_back(make_unique<Rect>(shapeShader, vec2((i % ROW_SIZE + 1) * (width / (ROW_SIZE + 1))/* to get the squares spaced evenly one the board */, row * (height / (ROW_SIZE + 1))), vec2(width/(2 * ROW_SIZE), height/(2 * ROW_SIZE)), color(0.5, 0.5, 0.5)));
-        states[i] = 1; //populate the states array with ones, signifying "on"
+        states[i] = 0; //populate the states array with zeros, meaning they have not been played on
 
         //same as squares except objects are slightly bigger to create outline effect
         //black by default to blend with background
@@ -106,66 +106,35 @@ void Engine::processInput() {
     //for each square, if it was clicked toggle it and adjacent squares.
     for(int i = 0; i < pow(ROW_SIZE, 2); i++){
         if(screen == play && mousePressedLastFrame && !mousePressed && squares[i]->isOverlapping(vec2(MouseX, MouseY))){
-            //need to toggle the square itself, as well as the squares adjacent if possible
-            //the square above is at index i-5, below is i+5, left is i-1, right is i+1
-            //i'm using modular math to make sure i-1 is actually one to the left and so on
-            //each row has indices 0,1,2,3,4 when the actual index is mod by 5
-
-            //starting with the clicked square
+            //if the state of a square is 0, it has not been played on yet and is playable
+            //if it is player 1's turn and a playable square is clicked, that square's state changes to 1 and it becomes player 2's turn
+            //if it is player 2's turn and a playable square is clicked, that square's state changes to 2 and it becomes player 1's turn
             if(states[i] == 0){
-                states[i] = 1;
-            }
-            else{
-                states[i] = 0;
-            }
-
-            //square above
-            if((i - 5) >= 0){ //i - 5 will always be the square above unless it is on the first row
-                if(states[i - 5] == 0){
-                    states[i - 5] = 1;
+                if(player == 1){
+                    states[i] = 1;
+                    player = 2;
                 }
                 else{
-                    states[i - 5] = 0;
+                    states[i] = 2;
+                    player = 1;
                 }
             }
 
-            //square below
-            if((i + 5) <= 24){ //i + 5 will always be the square below unless it is on the bottom row
-                if(states[i + 5] == 0){
-                    states[i + 5] = 1;
-                }
-                else{
-                    states[i + 5] = 0;
-                }
-            }
+            //check for a win
+            //TODO: create this algorithm :(
 
-            //square to the left
-            if((i - 1) % 5 < 4){ //a square has a square to the left unless the previous square is at mod index 4, the fifth column
-                if(states[i - 1] == 0){
-                    states[i - 1] = 1;
-                }
-                else{
-                    states[i - 1] = 0;
-                }
-            }
-
-            //square to the right
-            if((i + 1) % 5 > 0){ //a square has a square to the right unless the next square is at mod index 0, the first column
-                if(states[i + 1] == 0){
-                    states[i + 1] = 1;
-                }
-                else{
-                    states[i + 1] = 0;
-                }
-            }
         }
         //add a red outline if a square is moused over
-        if(screen == play && squares[i]->isOverlapping(vec2(MouseX,MouseY))){
+        if(screen == play && player == 1 && squares[i]->isOverlapping(vec2(MouseX,MouseY))){
             outlines[i]->setColor(vec3(1,0,0));
+        }
+        else if(screen == play && player == 2 && squares[i]->isOverlapping(vec2(MouseX,MouseY))){
+            outlines[i]->setColor(vec3(0,0,1));
         }
         else{
             outlines[i]->setColor(vec3(0,0,0));
         }
+
     }
     // Save mousePressed for next frame
     mousePressedLastFrame = mousePressed;
@@ -185,13 +154,16 @@ void Engine::update() {
 
     //if the sum is 0, then all lights are off and the game is over
     if(sum == 0){
-        screen = over;
+        //screen = over;
     }
 
     //change the color of each square depending on its state
     for(int i = 0; i < pow(ROW_SIZE, 2); i++){
         if(states[i] == 1){
-            squares[i]->setColor(vec3(1,1,0));
+            squares[i]->setColor(vec3(1,0,0));
+        }
+        else if(states[i] == 2){
+            squares[i]->setColor(vec3(0,0,1));
         }
         else{
             squares[i]->setColor(vec3(.5,.5,.5));
