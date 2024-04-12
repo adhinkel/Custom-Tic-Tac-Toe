@@ -24,8 +24,12 @@ private:
 
     /// @brief The width and height of the window.
     const unsigned int width = 800, height = 800; // Window dimensions
-    //here
-    const int ROW_SIZE = 3;
+    //change the size of the nxn grid here
+    const int ROW_SIZE = 15;
+
+    //change the number of squares in a row needed to win here
+    const int win_num = 3;
+
     int player = 1;
 
     /// @brief Keyboard state (True if pressed, false if not pressed).
